@@ -16,7 +16,7 @@ const toggleMenu = () => {
 </script>
 
 <template>
-  <header class="bg-white shadow-sm">
+  <header class="bg-gray-800 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <!-- Logo -->
@@ -46,25 +46,45 @@ const toggleMenu = () => {
           <nav class="flex space-x-8">
             <RouterLink
               to="/"
-              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-100 border-b-2"
+              :class="[
+                $route.path === '/'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent hover:border-orange-300 hover:text-orange-700',
+              ]"
             >
               Home
             </RouterLink>
             <RouterLink
               to="/services"
-              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-100 border-b-2"
+              :class="[
+                $route.path === '/services'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent hover:border-orange-300 hover:text-orange-700',
+              ]"
             >
               Services
             </RouterLink>
             <RouterLink
               to="/about"
-              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-100 border-b-2"
+              :class="[
+                $route.path === '/about'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent hover:border-orange-300 hover:text-orange-700',
+              ]"
             >
               About
             </RouterLink>
             <RouterLink
               to="/contact"
-              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700"
+              class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-100 border-b-2"
+              :class="[
+                $route.path === '/contact'
+                  ? 'border-orange-500 text-orange-500'
+                  : 'border-transparent hover:border-orange-300 hover:text-orange-700',
+              ]"
             >
               Contact
             </RouterLink>
@@ -113,25 +133,45 @@ const toggleMenu = () => {
       <div class="pt-2 pb-3 space-y-1">
         <RouterLink
           to="/"
-          class="block pl-3 pr-4 py-2 border-l-4 border-orange-500 text-base font-medium text-orange-700 bg-orange-50"
+          class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          :class="[
+            $route.path === '/'
+              ? 'border-orange-500 text-orange-500 bg-orange-50'
+              : 'border-transparent text-gray-100 hover:bg-gray-700 hover:border-orange-300 hover:text-orange-700',
+          ]"
         >
           Home
         </RouterLink>
         <RouterLink
           to="/services"
-          class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+          class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          :class="[
+            $route.path === '/services'
+              ? 'border-orange-500 text-orange-500 bg-orange-50'
+              : 'border-transparent text-gray-100 hover:bg-gray-700 hover:border-orange-300 hover:text-orange-700',
+          ]"
         >
           Services
         </RouterLink>
         <RouterLink
           to="/about"
-          class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+          class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          :class="[
+            $route.path === '/about'
+              ? 'border-orange-500 text-orange-500 bg-orange-50'
+              : 'border-transparent text-gray-100 hover:bg-gray-700 hover:border-orange-300 hover:text-orange-700',
+          ]"
         >
           About
         </RouterLink>
         <RouterLink
           to="/contact"
-          class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+          class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          :class="[
+            $route.path === '/contact'
+              ? 'border-orange-500 text-orange-500 bg-orange-50'
+              : 'border-transparent text-gray-100 hover:bg-gray-700 hover:border-orange-300 hover:text-orange-700',
+          ]"
         >
           Contact
         </RouterLink>

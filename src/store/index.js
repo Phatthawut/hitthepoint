@@ -9,8 +9,8 @@ export const useMainStore = defineStore("main", {
       tagline: "Digital Agency That Thrives on Your Success",
       description:
         "If you are looking for an agency to help you create a professional website online, you've come to the right place. We can help your business to the next level.",
-      address: "842/406 N Spting St, Los Angeles, CA 90012",
-      email: "info@hitthepoint.com",
+      address: "842/406 Rama 9 Rd, Bang Kapi, Huai Khwang, Bangkok 10310",
+      email: "info@hitthepoint.co",
       phone: "083 475-5212",
       facebook: "https://www.facebook.com/hitthepoint",
       instagram: "https://www.instagram.com/hitthepoint",

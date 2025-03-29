@@ -2,6 +2,7 @@
 import { useMainStore } from "./store";
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
+import ScrollToTop from "./components/ScrollToTop.vue";
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import Footer from "./components/Footer.vue";
       <RouterView />
     </main>
     <Footer />
+    <ScrollToTop />
   </div>
 </template>
 
