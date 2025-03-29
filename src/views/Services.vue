@@ -7,13 +7,21 @@ const store = useMainStore();
 <template>
   <div>
     <!-- Hero Section -->
-    <div class="bg-gray-900">
+    <section class="relative bg-gray-900">
+      <div class="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2015&q=80"
+          alt="Digital Services"
+          class="w-full h-full object-cover object-center"
+        />
+        <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
+      </div>
       <div
-        class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 lg:flex lg:justify-between"
+        class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8"
       >
         <div class="max-w-xl">
           <h2
-            class="text-4xl font-extrabold text-white sm:text-5xl sm:tracking-tight lg:text-6xl"
+            class="text-4xl font-dm-serif text-white sm:text-5xl sm:tracking-tight lg:text-6xl"
           >
             Our Services
           </h2>
@@ -22,14 +30,14 @@ const store = useMainStore();
           </p>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Services Overview -->
     <div class="py-12 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="lg:text-center">
           <p
-            class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl"
+            class="mt-2 text-3xl leading-8 font-dm-serif tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
           >
             Everything You Need to Succeed Online
           </p>
@@ -57,7 +65,7 @@ const store = useMainStore();
               </div>
               <div>
                 <h3
-                  class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl"
+                  class="text-2xl mt-12 lg:mt-0 font-dm-serif text-gray-900 tracking-tight sm:text-3xl lg:text-4xl"
                 >
                   Web Design
                 </h3>

@@ -7,13 +7,21 @@ const store = useMainStore();
 <template>
   <div>
     <!-- Hero Section -->
-    <div class="bg-gray-900">
+    <section class="relative bg-gray-900">
+      <div class="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+          alt="About Our Team"
+          class="w-full h-full object-cover object-center"
+        />
+        <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
+      </div>
       <div
-        class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 lg:flex lg:justify-between"
+        class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8"
       >
         <div class="max-w-xl">
           <h2
-            class="text-4xl font-extrabold text-white sm:text-5xl sm:tracking-tight lg:text-6xl"
+            class="text-4xl font-dm-serif text-white sm:text-5xl sm:tracking-tight lg:text-6xl"
           >
             About Us
           </h2>
@@ -23,7 +31,7 @@ const store = useMainStore();
           </p>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Our Story -->
     <div class="bg-white py-16 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-24">

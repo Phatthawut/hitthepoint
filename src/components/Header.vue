@@ -4,6 +4,11 @@ import { useMainStore } from "../store";
 
 const store = useMainStore();
 const isMenuOpen = ref(false);
+const showLogoText = ref(false);
+
+const handleLogoError = () => {
+  showLogoText.value = true;
+};
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -18,9 +23,20 @@ const toggleMenu = () => {
         <div class="flex items-center">
           <div class="flex-shrink-0 flex items-center">
             <RouterLink to="/" class="flex items-center">
-              <span class="text-xl font-semibold text-gray-900">{{
-                store.agency.name
-              }}</span>
+              <template v-if="store.agency.logo && !showLogoText">
+                <img
+                  :src="store.agency.logo"
+                  :alt="store.agency.name"
+                  class="h-32 w-auto"
+                  @error="handleLogoError"
+                />
+              </template>
+              <span
+                v-else
+                class="text-xl font-semibold font-dm-serif text-gray-900"
+              >
+                {{ store.agency.name }}
+              </span>
             </RouterLink>
           </div>
         </div>

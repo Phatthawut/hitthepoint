@@ -146,7 +146,8 @@ const store = useMainStore();
 
     <!-- Why Choose Us Section -->
     <section class="bg-orange-50 lg:py-48 py-24">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Clients We've Worked With Section 
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="lg:text-center">
           <h2 class="text-3xl font-dm-serif text-gray-900 sm:text-4xl">
             Clients We've Worked With
@@ -169,6 +170,7 @@ const store = useMainStore();
           </div>
         </div>
       </div>
+      -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-start">
           <h2
