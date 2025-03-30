@@ -1,7 +1,46 @@
 <script setup>
+import { ref } from "vue";
 import { useMainStore } from "../store";
 
 const store = useMainStore();
+const email = ref("");
+const isSubscribed = ref(false);
+const isLoading = ref(false);
+const errorMessage = ref("");
+
+const validateEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const handleSubscribe = async (e) => {
+  e.preventDefault();
+  errorMessage.value = "";
+
+  if (!email.value) {
+    errorMessage.value = "Please enter your email address";
+    return;
+  }
+
+  if (!validateEmail(email.value)) {
+    errorMessage.value = "Please enter a valid email address";
+    return;
+  }
+
+  isLoading.value = true;
+
+  try {
+    // Here you would typically make an API call to your backend
+    // For now, we'll simulate an API call with a timeout
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    isSubscribed.value = true;
+    email.value = "";
+  } catch (error) {
+    errorMessage.value = "Something went wrong. Please try again.";
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
 
 <template>
@@ -11,7 +50,7 @@ const store = useMainStore();
         <!-- Brand info -->
         <div class="col-span-1 md:col-span-1">
           <div class="flex items-center">
-            <span class="text-xl font-semibold">{{ store.agency.name }}</span>
+            <span class="text-xl font-dm-serif">{{ store.agency.name }}</span>
           </div>
           <p class="mt-2 text-sm text-gray-300">
             {{ store.agency.address }}
@@ -23,7 +62,7 @@ const store = useMainStore();
 
         <!-- Site Map -->
         <div class="col-span-1">
-          <h3 class="text-sm font-semibold text-white tracking-wider uppercase">
+          <h3 class="text-sm font-dm-serif text-white tracking-wider uppercase">
             Site Map
           </h3>
           <ul class="mt-4 space-y-4">
@@ -64,7 +103,7 @@ const store = useMainStore();
 
         <!-- Legal -->
         <div class="col-span-1">
-          <h3 class="text-sm font-semibold text-white tracking-wider uppercase">
+          <h3 class="text-sm font-dm-serif text-white tracking-wider uppercase">
             Legal
           </h3>
           <ul class="mt-4 space-y-4">
@@ -83,25 +122,65 @@ const store = useMainStore();
 
         <!-- Newsletter -->
         <div class="col-span-1">
-          <h3 class="text-sm font-semibold text-white tracking-wider uppercase">
+          <h3 class="text-sm font-dm-serif text-white tracking-wider uppercase">
             Subscribe
           </h3>
           <p class="mt-4 text-base text-gray-300">
             Sign up for our newsletter to stay updated.
           </p>
-          <form class="mt-4 flex">
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email address"
-              class="focus:ring-orange-500 focus:border-orange-500 block w-full rounded-md px-5 py-3 text-base text-gray-900"
-            />
+
+          <!-- Success Message -->
+          <div v-if="isSubscribed" class="mt-4 p-4 bg-green-100 rounded-md">
+            <p class="text-green-700">
+              Thank you for subscribing! You'll receive our updates soon.
+            </p>
+          </div>
+
+          <!-- Newsletter Form -->
+          <form v-else @submit="handleSubscribe" class="mt-4 space-y-4">
+            <div>
+              <input
+                v-model="email"
+                type="email"
+                name="email"
+                id="email"
+                placeholder="Email address"
+                :class="[
+                  'bg-gray-500 focus:ring-orange-500 focus:border-orange-500 block w-full rounded-md px-5 py-3 text-base text-gray-900',
+                  errorMessage ? 'border-red-500' : 'border-gray-300',
+                ]"
+              />
+              <p v-if="errorMessage" class="mt-2 text-sm text-red-400">
+                {{ errorMessage }}
+              </p>
+            </div>
             <button
               type="submit"
-              class="ml-3 flex-shrink-0 bg-orange-600 hover:bg-orange-700 border border-transparent rounded-md px-5 py-3 text-base font-medium text-white"
+              :disabled="isLoading"
+              class="w-full flex justify-center bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 disabled:cursor-not-allowed border border-transparent rounded-md px-5 py-3 text-base font-medium text-white transition duration-150 ease-in-out"
             >
-              Subscribe
+              <svg
+                v-if="isLoading"
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              {{ isLoading ? "Subscribing..." : "Subscribe" }}
             </button>
           </form>
         </div>
@@ -173,3 +252,18 @@ const store = useMainStore();
     </div>
   </footer>
 </template>
+
+<style scoped>
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

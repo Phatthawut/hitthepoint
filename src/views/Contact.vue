@@ -63,7 +63,9 @@ const handleSubmit = (e) => {
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- Contact Info -->
           <div>
-            <h2 class="text-3xl font-extrabold text-gray-900">Get in Touch</h2>
+            <h2 class="text-3xl lg:text-4xl font-dm-serif text-gray-900 mb-6">
+              Get in Touch
+            </h2>
             <p class="mt-4 text-lg text-gray-500">
               Have a project in mind or want to learn more about our services?
               We'd love to hear from you. Fill out the form or use our contact
@@ -92,7 +94,9 @@ const handleSubmit = (e) => {
                   </div>
                 </div>
                 <div class="ml-4">
-                  <h3 class="text-lg leading-6 font-medium text-gray-900">
+                  <h3
+                    class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                  >
                     Phone
                   </h3>
                   <p class="mt-2 text-base text-gray-500">
@@ -122,7 +126,9 @@ const handleSubmit = (e) => {
                   </div>
                 </div>
                 <div class="ml-4">
-                  <h3 class="text-lg leading-6 font-medium text-gray-900">
+                  <h3
+                    class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                  >
                     Email
                   </h3>
                   <p class="mt-2 text-base text-gray-500">
@@ -158,7 +164,9 @@ const handleSubmit = (e) => {
                   </div>
                 </div>
                 <div class="ml-4">
-                  <h3 class="text-lg leading-6 font-medium text-gray-900">
+                  <h3
+                    class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                  >
                     Address
                   </h3>
                   <p class="mt-2 text-base text-gray-500">
@@ -168,7 +176,9 @@ const handleSubmit = (e) => {
               </div>
 
               <div class="mt-10">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                <h3
+                  class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                >
                   Follow Us
                 </h3>
                 <div class="mt-4 flex space-x-6">
@@ -222,7 +232,9 @@ const handleSubmit = (e) => {
 
           <!-- Contact Form -->
           <div class="bg-white p-8 rounded-lg shadow-lg">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">
+            <h3
+              class="text-2xl lg:text-3xl font-dm-serif font-bold text-gray-900 mb-6"
+            >
               Send Us a Message
             </h3>
             <form @submit="handleSubmit" class="space-y-6">
@@ -317,7 +329,9 @@ const handleSubmit = (e) => {
     <div class="bg-gray-50 py-16">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="text-3xl font-extrabold text-gray-900">Our Location</h2>
+          <h2 class="text-3xl lg:text-4xl font-dm-serif text-gray-900">
+            Our Location
+          </h2>
           <p class="mt-4 text-lg text-gray-500">Visit us at our office</p>
         </div>
         <div class="mt-12 bg-gray-300 rounded-lg overflow-hidden h-96">

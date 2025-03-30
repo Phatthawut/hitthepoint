@@ -52,12 +52,9 @@ const store = useMainStore();
             <!-- Web Design Service -->
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
               <div class="mt-10 -mx-4 lg:mt-0">
-                <div
-                  class="relative lg:mx-0 rounded-lg shadow-lg overflow-hidden"
-                >
+                <div class="relative lg:mx-0 overflow-hidden">
                   <img
-                    class="relative mx-auto"
-                    width="490"
+                    class="object-cover mx-auto"
                     src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                     alt="Web design illustration"
                   />
@@ -97,7 +94,9 @@ const store = useMainStore();
                       </div>
                     </div>
                     <div class="ml-4">
-                      <h4 class="text-lg leading-6 font-medium text-gray-900">
+                      <h4
+                        class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                      >
                         Responsive Design
                       </h4>
                       <p class="mt-2 text-base text-gray-500">
@@ -127,7 +126,9 @@ const store = useMainStore();
                       </div>
                     </div>
                     <div class="ml-4">
-                      <h4 class="text-lg leading-6 font-medium text-gray-900">
+                      <h4
+                        class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                      >
                         User Experience Design
                       </h4>
                       <p class="mt-2 text-base text-gray-500">
@@ -143,12 +144,9 @@ const store = useMainStore();
             <!-- Web Development Service -->
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
               <div class="lg:order-last mt-10 -mx-4 lg:mt-0">
-                <div
-                  class="relative lg:mx-0 rounded-lg shadow-lg overflow-hidden"
-                >
+                <div class="relative lg:mx-0 overflow-hidden">
                   <img
-                    class="relative mx-auto"
-                    width="490"
+                    class="object-cover mx-auto"
                     src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1472&q=80"
                     alt="Web development illustration"
                   />
@@ -156,7 +154,7 @@ const store = useMainStore();
               </div>
               <div>
                 <h3
-                  class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl"
+                  class="text-2xl mt-12 lg:mt-0 font-dm-serif text-gray-900 tracking-tight sm:text-3xl lg:text-4xl"
                 >
                   Web Development
                 </h3>
@@ -188,7 +186,9 @@ const store = useMainStore();
                       </div>
                     </div>
                     <div class="ml-4">
-                      <h4 class="text-lg leading-6 font-medium text-gray-900">
+                      <h4
+                        class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                      >
                         Custom Development
                       </h4>
                       <p class="mt-2 text-base text-gray-500">
@@ -218,7 +218,9 @@ const store = useMainStore();
                       </div>
                     </div>
                     <div class="ml-4">
-                      <h4 class="text-lg leading-6 font-medium text-gray-900">
+                      <h4
+                        class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                      >
                         Security & Performance
                       </h4>
                       <p class="mt-2 text-base text-gray-500">
@@ -234,12 +236,9 @@ const store = useMainStore();
             <!-- Digital Marketing -->
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
               <div class="mt-10 -mx-4 lg:mt-0">
-                <div
-                  class="relative lg:mx-0 rounded-lg shadow-lg overflow-hidden"
-                >
+                <div class="relative lg:mx-0 overflow-hidden">
                   <img
-                    class="relative mx-auto"
-                    width="490"
+                    class="object-cover mx-auto"
                     src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80"
                     alt="Digital marketing illustration"
                   />
@@ -247,7 +246,7 @@ const store = useMainStore();
               </div>
               <div>
                 <h3
-                  class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl"
+                  class="text-2xl mt-12 lg:mt-0 font-dm-serif text-gray-900 tracking-tight sm:text-3xl lg:text-4xl"
                 >
                   Digital Marketing
                 </h3>
@@ -279,7 +278,9 @@ const store = useMainStore();
                       </div>
                     </div>
                     <div class="ml-4">
-                      <h4 class="text-lg leading-6 font-medium text-gray-900">
+                      <h4
+                        class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                      >
                         SEO & Content Marketing
                       </h4>
                       <p class="mt-2 text-base text-gray-500">
@@ -309,7 +310,9 @@ const store = useMainStore();
                       </div>
                     </div>
                     <div class="ml-4">
-                      <h4 class="text-lg leading-6 font-medium text-gray-900">
+                      <h4
+                        class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                      >
                         Social Media Management
                       </h4>
                       <p class="mt-2 text-base text-gray-500">
@@ -332,7 +335,7 @@ const store = useMainStore();
         class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-24 lg:px-8 lg:flex lg:items-center lg:justify-between"
       >
         <h2
-          class="text-3xl font-extrabold tracking-tight text-white md:text-4xl"
+          class="text-3xl font-dm-serif tracking-tight text-white md:text-4xl"
         >
           <span class="block">Ready to transform your online presence?</span>
           <span class="block text-white">Get in touch with us today.</span>

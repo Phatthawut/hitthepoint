@@ -38,7 +38,7 @@ const store = useMainStore();
       <div class="relative max-w-xl mx-auto">
         <div class="text-center">
           <h2
-            class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl"
+            class="text-3xl font-dm-serif tracking-tight text-gray-900 sm:text-4xl lg:text-6xl"
           >
             Our Story
           </h2>
@@ -72,7 +72,7 @@ const store = useMainStore();
       <div class="relative max-w-xl mx-auto">
         <div class="text-center">
           <h2
-            class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl"
+            class="text-3xl font-dm-serif tracking-tight text-gray-900 sm:text-4xl lg:text-6xl"
           >
             Our Values
           </h2>
@@ -104,7 +104,9 @@ const store = useMainStore();
                 </div>
               </div>
               <div class="ml-4">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                <h3
+                  class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                >
                   Excellence
                 </h3>
                 <p class="mt-2 text-base text-gray-500">
@@ -136,7 +138,9 @@ const store = useMainStore();
                 </div>
               </div>
               <div class="ml-4">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                <h3
+                  class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                >
                   Innovation
                 </h3>
                 <p class="mt-2 text-base text-gray-500">
@@ -168,7 +172,9 @@ const store = useMainStore();
                 </div>
               </div>
               <div class="ml-4">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                <h3
+                  class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
+                >
                   Partnership
                 </h3>
                 <p class="mt-2 text-base text-gray-500">
@@ -188,7 +194,7 @@ const store = useMainStore();
         class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between"
       >
         <h2
-          class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
+          class="text-3xl font-dm-serif tracking-tight text-white sm:text-4xl"
         >
           <span class="block">Ready to get started?</span>
           <span class="block text-white">Get in touch with us today.</span>

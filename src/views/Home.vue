@@ -255,7 +255,7 @@ const store = useMainStore();
     </section>
 
     <!-- Team Section -->
-    <section class="bg-orange-50 py-12">
+    <section class="bg-orange-50 py-12 pt-36 sm:pt-0">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="space-y-12">
           <div
@@ -273,13 +273,11 @@ const store = useMainStore();
             </p>
           </div>
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 pt-24 sm:pt-0"
           >
             <!-- Team member images would go here -->
             <div class="group">
-              <div
-                class="relative h-80 w-full overflow-hidden rounded-lg bg-white"
-              >
+              <div class="h-80 w-full overflow-hidden rounded-lg bg-white">
                 <img
                   src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=687&q=80"
                   alt=""
@@ -288,9 +286,7 @@ const store = useMainStore();
               </div>
             </div>
             <div class="group">
-              <div
-                class="relative h-80 w-full overflow-hidden rounded-lg bg-white"
-              >
+              <div class="h-80 w-full overflow-hidden rounded-lg bg-white">
                 <img
                   src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=687&q=80"
                   alt=""
@@ -299,9 +295,7 @@ const store = useMainStore();
               </div>
             </div>
             <div class="group">
-              <div
-                class="relative h-80 w-full overflow-hidden rounded-lg bg-white"
-              >
+              <div class="h-80 w-full overflow-hidden rounded-lg bg-white">
                 <img
                   src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=688&q=80"
                   alt=""
