@@ -1,7 +1,16 @@
 <script setup>
 import { useMainStore } from "../store";
+import { onMounted, ref } from "vue";
 
 const store = useMainStore();
+const isLoaded = ref(false);
+
+onMounted(() => {
+  // Trigger animations after component is mounted
+  setTimeout(() => {
+    isLoaded.value = true;
+  }, 100);
+});
 </script>
 
 <template>
@@ -12,7 +21,8 @@ const store = useMainStore();
         <img
           src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2015&q=80"
           alt="Digital Services"
-          class="w-full h-full object-cover object-center"
+          class="w-full h-full object-cover object-center transition-opacity duration-1000"
+          :class="{ 'opacity-100': isLoaded, 'opacity-0': !isLoaded }"
         />
         <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
       </div>
@@ -21,11 +31,21 @@ const store = useMainStore();
       >
         <div class="max-w-xl">
           <h2
-            class="text-4xl font-dm-serif text-white sm:text-5xl sm:tracking-tight lg:text-6xl"
+            class="text-4xl font-dm-serif text-white sm:text-5xl sm:tracking-tight lg:text-6xl transform transition-all duration-1000 ease-out"
+            :class="{
+              'translate-y-0 opacity-100': isLoaded,
+              'translate-y-10 opacity-0': !isLoaded,
+            }"
           >
             Our Services
           </h2>
-          <p class="mt-5 text-xl text-gray-400">
+          <p
+            class="mt-5 text-xl text-gray-400 transform transition-all duration-1000 delay-200 ease-out"
+            :class="{
+              'translate-y-0 opacity-100': isLoaded,
+              'translate-y-10 opacity-0': !isLoaded,
+            }"
+          >
             Comprehensive solutions to help your business grow online.
           </p>
         </div>
@@ -35,7 +55,7 @@ const store = useMainStore();
     <!-- Services Overview -->
     <div class="py-12 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="lg:text-center">
+        <div class="lg:text-center reveal-element">
           <p
             class="mt-2 text-3xl leading-8 font-dm-serif tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
           >
@@ -51,16 +71,18 @@ const store = useMainStore();
           <div class="space-y-12">
             <!-- Web Design Service -->
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-              <div class="mt-10 -mx-4 lg:mt-0">
-                <div class="relative lg:mx-0 overflow-hidden">
+              <div class="mt-10 -mx-4 lg:mt-0 reveal-from-right">
+                <div
+                  class="relative lg:mx-0 overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
+                >
                   <img
-                    class="object-cover mx-auto"
+                    class="object-cover mx-auto transform transition-transform duration-700 hover:scale-105"
                     src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                     alt="Web design illustration"
                   />
                 </div>
               </div>
-              <div>
+              <div class="reveal-element">
                 <h3
                   class="text-2xl mt-12 lg:mt-0 font-dm-serif text-gray-900 tracking-tight sm:text-3xl lg:text-4xl"
                 >
@@ -73,10 +95,12 @@ const store = useMainStore();
                   responsive layouts.
                 </p>
                 <div class="mt-10 space-y-10">
-                  <div class="flex">
+                  <div
+                    class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-100"
+                  >
                     <div class="flex-shrink-0">
                       <div
-                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                       >
                         <svg
                           class="h-6 w-6"
@@ -105,10 +129,12 @@ const store = useMainStore();
                       </p>
                     </div>
                   </div>
-                  <div class="flex">
+                  <div
+                    class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-200"
+                  >
                     <div class="flex-shrink-0">
                       <div
-                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                       >
                         <svg
                           class="h-6 w-6"
@@ -143,16 +169,18 @@ const store = useMainStore();
 
             <!-- Web Development Service -->
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-              <div class="lg:order-last mt-10 -mx-4 lg:mt-0">
-                <div class="relative lg:mx-0 overflow-hidden">
+              <div class="lg:order-last mt-10 -mx-4 lg:mt-0 reveal-from-right">
+                <div
+                  class="relative lg:mx-0 overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
+                >
                   <img
-                    class="object-cover mx-auto"
+                    class="object-cover mx-auto transform transition-transform duration-700 hover:scale-105"
                     src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1472&q=80"
                     alt="Web development illustration"
                   />
                 </div>
               </div>
-              <div>
+              <div class="reveal-element">
                 <h3
                   class="text-2xl mt-12 lg:mt-0 font-dm-serif text-gray-900 tracking-tight sm:text-3xl lg:text-4xl"
                 >
@@ -165,10 +193,12 @@ const store = useMainStore();
                   is fast, secure, and reliable.
                 </p>
                 <div class="mt-10 space-y-10">
-                  <div class="flex">
+                  <div
+                    class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-100"
+                  >
                     <div class="flex-shrink-0">
                       <div
-                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                       >
                         <svg
                           class="h-6 w-6"
@@ -197,10 +227,12 @@ const store = useMainStore();
                       </p>
                     </div>
                   </div>
-                  <div class="flex">
+                  <div
+                    class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-200"
+                  >
                     <div class="flex-shrink-0">
                       <div
-                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                       >
                         <svg
                           class="h-6 w-6"
@@ -235,16 +267,18 @@ const store = useMainStore();
 
             <!-- Digital Marketing -->
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
-              <div class="mt-10 -mx-4 lg:mt-0">
-                <div class="relative lg:mx-0 overflow-hidden">
+              <div class="mt-10 -mx-4 lg:mt-0 reveal-from-right">
+                <div
+                  class="relative lg:mx-0 overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl"
+                >
                   <img
-                    class="object-cover mx-auto"
+                    class="object-cover mx-auto transform transition-transform duration-700 hover:scale-105"
                     src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80"
                     alt="Digital marketing illustration"
                   />
                 </div>
               </div>
-              <div>
+              <div class="reveal-element">
                 <h3
                   class="text-2xl mt-12 lg:mt-0 font-dm-serif text-gray-900 tracking-tight sm:text-3xl lg:text-4xl"
                 >
@@ -257,10 +291,12 @@ const store = useMainStore();
                   channels to maximize your online presence.
                 </p>
                 <div class="mt-10 space-y-10">
-                  <div class="flex">
+                  <div
+                    class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-100"
+                  >
                     <div class="flex-shrink-0">
                       <div
-                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                       >
                         <svg
                           class="h-6 w-6"
@@ -289,10 +325,12 @@ const store = useMainStore();
                       </p>
                     </div>
                   </div>
-                  <div class="flex">
+                  <div
+                    class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-200"
+                  >
                     <div class="flex-shrink-0">
                       <div
-                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                        class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                       >
                         <svg
                           class="h-6 w-6"
@@ -332,7 +370,7 @@ const store = useMainStore();
     <!-- Call to Action -->
     <div class="bg-orange-500">
       <div
-        class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-24 lg:px-8 lg:flex lg:items-center lg:justify-between"
+        class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-24 lg:px-8 lg:flex lg:items-center lg:justify-between reveal-element"
       >
         <h2
           class="text-3xl font-dm-serif tracking-tight text-white md:text-4xl"
@@ -344,7 +382,7 @@ const store = useMainStore();
           <div class="inline-flex rounded-md shadow">
             <a
               href="#"
-              class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-orange-600 bg-white hover:bg-gray-50"
+              class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-orange-600 bg-white hover:bg-gray-50 transition-all duration-300 transform hover:scale-105"
             >
               Request a Quote
             </a>
@@ -354,3 +392,101 @@ const store = useMainStore();
     </div>
   </div>
 </template>
+
+<style>
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.reveal-element {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+  animation-play-state: paused;
+}
+
+.reveal-from-right {
+  opacity: 0;
+  transform: translateX(30px);
+  animation: fadeInRight 0.8s ease forwards;
+  animation-play-state: paused;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+/* Trigger animations when scrolled into view */
+.reveal-element.is-visible,
+.reveal-from-right.is-visible {
+  animation-play-state: running;
+}
+</style>
+
+<script>
+// This script section adds scroll-triggered animations
+export default {
+  mounted() {
+    this.observeElements();
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
+  methods: {
+    observeElements() {
+      const elementsToAnimate = document.querySelectorAll(
+        ".reveal-element, .reveal-from-right"
+      );
+
+      // Set up Intersection Observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      // Apply observer to all elements
+      elementsToAnimate.forEach((element) => {
+        observer.observe(element);
+      });
+    },
+    handleScroll() {
+      // Trigger observer check on scroll
+      this.observeElements();
+    },
+  },
+};
+</script>

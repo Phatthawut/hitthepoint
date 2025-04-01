@@ -1,8 +1,9 @@
 <script setup>
 import { useMainStore } from "../store";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const store = useMainStore();
+const isLoaded = ref(false);
 
 // Form state
 const form = ref({
@@ -26,6 +27,13 @@ const handleSubmit = (e) => {
     company: "",
   };
 };
+
+onMounted(() => {
+  // Trigger animations after component is mounted
+  setTimeout(() => {
+    isLoaded.value = true;
+  }, 100);
+});
 </script>
 
 <template>
@@ -36,7 +44,8 @@ const handleSubmit = (e) => {
         <img
           src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2072&q=80"
           alt="Contact Us"
-          class="w-full h-full object-cover object-center"
+          class="w-full h-full object-cover object-center transition-opacity duration-1000"
+          :class="{ 'opacity-100': isLoaded, 'opacity-0': !isLoaded }"
         />
         <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
       </div>
@@ -45,11 +54,21 @@ const handleSubmit = (e) => {
       >
         <div class="max-w-xl">
           <h2
-            class="text-4xl font-dm-serif text-white sm:text-5xl sm:tracking-tight lg:text-6xl"
+            class="text-4xl font-dm-serif text-white sm:text-5xl sm:tracking-tight lg:text-6xl transform transition-all duration-1000 ease-out"
+            :class="{
+              'translate-y-0 opacity-100': isLoaded,
+              'translate-y-10 opacity-0': !isLoaded,
+            }"
           >
             Contact Us
           </h2>
-          <p class="mt-5 text-xl text-gray-400">
+          <p
+            class="mt-5 text-xl text-gray-400 transform transition-all duration-1000 delay-200 ease-out"
+            :class="{
+              'translate-y-0 opacity-100': isLoaded,
+              'translate-y-10 opacity-0': !isLoaded,
+            }"
+          >
             Get in touch with our team for any inquiries or to discuss your
             project.
           </p>
@@ -62,7 +81,7 @@ const handleSubmit = (e) => {
       <div class="relative max-w-7xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- Contact Info -->
-          <div>
+          <div class="reveal-element">
             <h2 class="text-3xl lg:text-4xl font-dm-serif text-gray-900 mb-6">
               Get in Touch
             </h2>
@@ -73,10 +92,12 @@ const handleSubmit = (e) => {
             </p>
 
             <div class="mt-8 space-y-6">
-              <div class="flex">
+              <div
+                class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-100"
+              >
                 <div class="flex-shrink-0">
                   <div
-                    class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                    class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                   >
                     <svg
                       class="h-6 w-6"
@@ -105,10 +126,12 @@ const handleSubmit = (e) => {
                 </div>
               </div>
 
-              <div class="flex">
+              <div
+                class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-200"
+              >
                 <div class="flex-shrink-0">
                   <div
-                    class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                    class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                   >
                     <svg
                       class="h-6 w-6"
@@ -137,10 +160,12 @@ const handleSubmit = (e) => {
                 </div>
               </div>
 
-              <div class="flex">
+              <div
+                class="flex hover:shadow-lg transition-all duration-300 p-3 rounded-lg hover:-translate-y-1 reveal-element delay-300"
+              >
                 <div class="flex-shrink-0">
                   <div
-                    class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white"
+                    class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white transform transition-transform hover:scale-110 duration-300"
                   >
                     <svg
                       class="h-6 w-6"
@@ -175,14 +200,17 @@ const handleSubmit = (e) => {
                 </div>
               </div>
 
-              <div class="mt-10">
+              <div class="mt-10 reveal-element delay-400">
                 <h3
                   class="font-dm-serif text-lg leading-6 font-medium text-gray-900"
                 >
                   Follow Us
                 </h3>
                 <div class="mt-4 flex space-x-6">
-                  <a href="#" class="text-gray-400 hover:text-gray-500">
+                  <a
+                    href="#"
+                    class="text-gray-400 hover:text-gray-500 transition-all duration-300 hover:scale-125"
+                  >
                     <span class="sr-only">Facebook</span>
                     <svg
                       class="h-6 w-6"
@@ -197,7 +225,10 @@ const handleSubmit = (e) => {
                       />
                     </svg>
                   </a>
-                  <a href="#" class="text-gray-400 hover:text-gray-500">
+                  <a
+                    href="#"
+                    class="text-gray-400 hover:text-gray-500 transition-all duration-300 hover:scale-125"
+                  >
                     <span class="sr-only">Twitter</span>
                     <svg
                       class="h-6 w-6"
@@ -210,7 +241,10 @@ const handleSubmit = (e) => {
                       />
                     </svg>
                   </a>
-                  <a href="#" class="text-gray-400 hover:text-gray-500">
+                  <a
+                    href="#"
+                    class="text-gray-400 hover:text-gray-500 transition-all duration-300 hover:scale-125"
+                  >
                     <span class="sr-only">Instagram</span>
                     <svg
                       class="h-6 w-6"
@@ -231,14 +265,14 @@ const handleSubmit = (e) => {
           </div>
 
           <!-- Contact Form -->
-          <div class="bg-white p-8 rounded-lg shadow-lg">
+          <div class="bg-white p-8 rounded-lg shadow-lg reveal-from-right">
             <h3
               class="text-2xl lg:text-3xl font-dm-serif font-bold text-gray-900 mb-6"
             >
               Send Us a Message
             </h3>
             <form @submit="handleSubmit" class="space-y-6">
-              <div>
+              <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="name"
                   class="block text-sm font-medium text-gray-700"
@@ -248,12 +282,11 @@ const handleSubmit = (e) => {
                   type="text"
                   id="name"
                   v-model="form.name"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                   required
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
                 />
               </div>
-
-              <div>
+              <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="email"
                   class="block text-sm font-medium text-gray-700"
@@ -263,40 +296,37 @@ const handleSubmit = (e) => {
                   type="email"
                   id="email"
                   v-model="form.email"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                   required
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
                 />
               </div>
-
-              <div>
+              <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="phone"
                   class="block text-sm font-medium text-gray-700"
-                  >Phone</label
+                  >Phone (optional)</label
                 >
                 <input
-                  type="text"
+                  type="tel"
                   id="phone"
                   v-model="form.phone"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
                 />
               </div>
-
-              <div>
+              <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="company"
                   class="block text-sm font-medium text-gray-700"
-                  >Company</label
+                  >Company (optional)</label
                 >
                 <input
                   type="text"
                   id="company"
                   v-model="form.company"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
                 />
               </div>
-
-              <div>
+              <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="message"
                   class="block text-sm font-medium text-gray-700"
@@ -306,15 +336,14 @@ const handleSubmit = (e) => {
                   id="message"
                   v-model="form.message"
                   rows="4"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
                   required
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
                 ></textarea>
               </div>
-
               <div>
                 <button
                   type="submit"
-                  class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                  class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 transform hover:scale-105"
                 >
                   Send Message
                 </button>
@@ -344,3 +373,105 @@ const handleSubmit = (e) => {
     </div>
   </div>
 </template>
+
+<style>
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.reveal-element {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+  animation-play-state: paused;
+}
+
+.reveal-from-right {
+  opacity: 0;
+  transform: translateX(30px);
+  animation: fadeInRight 0.8s ease forwards;
+  animation-play-state: paused;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* Trigger animations when scrolled into view */
+.reveal-element.is-visible,
+.reveal-from-right.is-visible {
+  animation-play-state: running;
+}
+</style>
+
+<script>
+// This script section adds scroll-triggered animations
+export default {
+  mounted() {
+    this.observeElements();
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
+  methods: {
+    observeElements() {
+      const elementsToAnimate = document.querySelectorAll(
+        ".reveal-element, .reveal-from-right"
+      );
+
+      // Set up Intersection Observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      // Apply observer to all elements
+      elementsToAnimate.forEach((element) => {
+        observer.observe(element);
+      });
+    },
+    handleScroll() {
+      // Trigger observer check on scroll
+      this.observeElements();
+    },
+  },
+};
+</script>
