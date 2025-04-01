@@ -1,11 +1,19 @@
 <script setup>
 import { useMainStore } from "../store";
 import { ref, onMounted } from "vue";
+import emailjs from "@emailjs/browser";
 
 const store = useMainStore();
 const isLoaded = ref(false);
+const isSubmitting = ref(false);
+const submitStatus = ref({ show: false, isError: false, message: "" });
 
-// Form state
+// Access environment variables using import.meta.env instead of process.env
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+// Form state with validation
 const form = ref({
   name: "",
   email: "",
@@ -14,21 +22,129 @@ const form = ref({
   company: "",
 });
 
-const handleSubmit = (e) => {
+// Form validation
+const errors = ref({});
+
+// Enhanced validation with more specific checks
+const validateForm = () => {
+  errors.value = {};
+
+  // Name validation (required, min 2 chars, no numbers or special chars)
+  if (!form.value.name.trim()) {
+    errors.value.name = "Name is required";
+  } else if (form.value.name.trim().length < 2) {
+    errors.value.name = "Name must be at least 2 characters";
+  } else if (!/^[A-Za-z\s\-']+$/.test(form.value.name.trim())) {
+    errors.value.name =
+      "Name should only contain letters, spaces, hyphens, and apostrophes";
+  }
+
+  // Email validation (required, valid format)
+  if (!form.value.email.trim()) {
+    errors.value.email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email.trim())) {
+    errors.value.email = "Please enter a valid email address";
+  }
+
+  // Phone validation (optional, but if provided must be valid)
+  if (form.value.phone && !/^[\d\+\-\s\(\)]+$/.test(form.value.phone.trim())) {
+    errors.value.phone = "Please enter a valid phone number";
+  }
+
+  // Message validation (required, min length)
+  if (!form.value.message.trim()) {
+    errors.value.message = "Message is required";
+  } else if (form.value.message.trim().length < 10) {
+    errors.value.message = "Message must be at least 10 characters";
+  }
+
+  return Object.keys(errors.value).length === 0;
+};
+
+// Input sanitization function
+const sanitizeInput = (input) => {
+  if (!input) return "";
+
+  // Create a temporary DOM element
+  const tempElement = document.createElement("div");
+
+  // Set its text content (this escapes HTML)
+  tempElement.textContent = input;
+
+  // Get the sanitized content
+  return tempElement.innerHTML;
+};
+
+const handleSubmit = async (e) => {
   e.preventDefault();
-  // In a real application, you would handle form submission here
-  alert("Form submitted successfully!");
-  // Reset form
-  form.value = {
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-    company: "",
-  };
+
+  if (!validateForm()) {
+    submitStatus.value = {
+      show: true,
+      isError: true,
+      message: "Please fill in all required fields correctly.",
+    };
+    return;
+  }
+
+  isSubmitting.value = true;
+  submitStatus.value.show = false;
+
+  try {
+    // Sanitize all inputs before sending
+    const templateParams = {
+      from_name: sanitizeInput(form.value.name),
+      from_email: sanitizeInput(form.value.email),
+      phone: sanitizeInput(form.value.phone) || "Not provided",
+      company: sanitizeInput(form.value.company) || "Not provided",
+      message: sanitizeInput(form.value.message),
+      to_name: sanitizeInput(store.agency.name) || "Hit The Point Team",
+      reply_to: sanitizeInput(form.value.email),
+    };
+
+    // Using environment variables instead of hardcoded values
+    await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      templateParams,
+      EMAILJS_PUBLIC_KEY
+    );
+
+    submitStatus.value = {
+      show: true,
+      isError: false,
+      message:
+        "Thank you! Your message has been sent successfully. We will get back to you soon.",
+    };
+
+    // Reset form
+    form.value = {
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+      company: "",
+    };
+
+    // Reset errors
+    errors.value = {};
+  } catch (error) {
+    console.error("Error sending email:", error);
+    submitStatus.value = {
+      show: true,
+      isError: true,
+      message:
+        "Sorry, there was an error sending your message. Please try again or contact us directly.",
+    };
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 
 onMounted(() => {
+  // Initialize EmailJS with your public key from env variable
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
   // Trigger animations after component is mounted
   setTimeout(() => {
     isLoaded.value = true;
@@ -276,76 +392,140 @@ onMounted(() => {
                 <label
                   for="name"
                   class="block text-sm font-medium text-gray-700"
-                  >Name</label
                 >
+                  Name <span class="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   id="name"
                   v-model="form.name"
                   required
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
+                  :class="[
+                    'mt-1 block w-full h-10 px-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300',
+                    errors.name ? 'border-red-500' : 'border-gray-300',
+                  ]"
                 />
+                <p v-if="errors.name" class="mt-1 text-sm text-red-500">
+                  {{ errors.name }}
+                </p>
               </div>
+
               <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="email"
                   class="block text-sm font-medium text-gray-700"
-                  >Email</label
                 >
+                  Email <span class="text-red-500">*</span>
+                </label>
                 <input
                   type="email"
                   id="email"
                   v-model="form.email"
                   required
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
+                  :class="[
+                    'mt-1 block w-full h-10 px-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300',
+                    errors.email ? 'border-red-500' : 'border-gray-300',
+                  ]"
                 />
+                <p v-if="errors.email" class="mt-1 text-sm text-red-500">
+                  {{ errors.email }}
+                </p>
               </div>
+
               <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="phone"
                   class="block text-sm font-medium text-gray-700"
-                  >Phone (optional)</label
                 >
+                  Phone (optional)
+                </label>
                 <input
                   type="tel"
                   id="phone"
                   v-model="form.phone"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
+                  class="mt-1 block w-full h-10 px-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
                 />
               </div>
+
               <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="company"
                   class="block text-sm font-medium text-gray-700"
-                  >Company (optional)</label
                 >
+                  Company (optional)
+                </label>
                 <input
                   type="text"
                   id="company"
                   v-model="form.company"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
+                  class="mt-1 block w-full h-10 px-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
                 />
               </div>
+
               <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="message"
                   class="block text-sm font-medium text-gray-700"
-                  >Message</label
                 >
+                  Message <span class="text-red-500">*</span>
+                </label>
                 <textarea
                   id="message"
                   v-model="form.message"
                   rows="4"
                   required
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300"
+                  :class="[
+                    'mt-1 block w-full h-24 p-2 border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm transition-all duration-300',
+                    errors.message ? 'border-red-500' : 'border-gray-300',
+                  ]"
                 ></textarea>
+                <p v-if="errors.message" class="mt-1 text-sm text-red-500">
+                  {{ errors.message }}
+                </p>
               </div>
+
+              <!-- Status Message -->
+              <div
+                v-if="submitStatus.show"
+                :class="[
+                  'p-4 rounded-md mb-4 transition-all duration-300',
+                  submitStatus.isError
+                    ? 'bg-red-50 text-red-700'
+                    : 'bg-green-50 text-green-700',
+                ]"
+              >
+                {{ submitStatus.message }}
+              </div>
+
+              <!-- Submit Button -->
               <div>
                 <button
                   type="submit"
-                  class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 transform hover:scale-105"
+                  :disabled="isSubmitting"
+                  class="w-full inline-flex justify-center items-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  <svg
+                    v-if="isSubmitting"
+                    class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  {{ isSubmitting ? "Sending..." : "Send Message" }}
                 </button>
               </div>
             </form>
@@ -366,7 +546,14 @@ onMounted(() => {
         <div class="mt-12 bg-gray-300 rounded-lg overflow-hidden h-96">
           <!-- In a real app, you would embed a Google Maps iframe or other map service here -->
           <div class="flex items-center justify-center h-full">
-            <p class="text-gray-600 text-lg">Map Placeholder</p>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1020.5016913013299!2d100.56705183431438!3d13.754286603244037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29ef33442611f%3A0x9d1ddb4e4964bfcb!2z4LmB4Lit4Liq4Lib4Liy4LiiIOC4nuC4o-C4sOC4o-C4suC4oSA5!5e1!3m2!1sth!2sth!4v1743516692901!5m2!1sth!2sth"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="w-full h-full"
+            ></iframe>
           </div>
         </div>
       </div>
