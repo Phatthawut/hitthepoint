@@ -252,20 +252,15 @@ onMounted(() => {
           <h2
             class="text-4xl font-dm-serif text-white sm:text-5xl w-full lg:w-1/2 reveal-element"
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Your Vision, Our Expertise Let’s Build the Future Together!
           </h2>
           <p
             class="mt-4 text-lg text-white w-full lg:w-1/2 reveal-element delay-200"
           >
-            Nam efficitur ante ac leo bibendum, vitae tincidunt dui cursus.
-            Praesent suscipit consequat est non gravida. Pellentesque commodo
-            sodales felis, at congue purus ultricies id. Pellentesque eget
-            venenatis orci. Duis sed massa vel lacus dapibus bibendum nec id
-            metus. Proin faucibus et felis nec sagittis. Mauris sapien neque,
-            feugiat a libero nec, interdum porta libero. Morbi sem purus,
-            euismod nec gravida quis, egestas in odio. Etiam vitae neque
-            tincidunt, iaculis eros posuere, tincidunt dolor. Donec tempus erat
-            arcu, in tempor elit auctor ut.
+            Your online presence is more than just a website—it’s the digital
+            foundation of your business. We craft websites that not only look
+            great but also drive results. Let us help you create a future-proof
+            online presence that grows with you.
           </p>
         </div>
       </div>

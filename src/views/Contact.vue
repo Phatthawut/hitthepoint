@@ -1,7 +1,10 @@
 <script setup>
 import { useMainStore } from "../store";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import emailjs from "@emailjs/browser";
+import { useReCaptcha } from "vue-recaptcha-v3";
+
+const { executeRecaptcha, recaptchaLoaded } = useReCaptcha();
 
 const store = useMainStore();
 const isLoaded = ref(false);
@@ -12,6 +15,44 @@ const submitStatus = ref({ show: false, isError: false, message: "" });
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+// Rate limiting: Track submissions
+const lastSubmission = ref(
+  localStorage.getItem("lastSubmission")
+    ? parseInt(localStorage.getItem("lastSubmission"))
+    : 0
+);
+const submissionCount = ref(
+  localStorage.getItem("submissionCount")
+    ? parseInt(localStorage.getItem("submissionCount"))
+    : 0
+);
+
+// Computed property to check if submission is allowed (rate limiting)
+const canSubmit = computed(() => {
+  const now = Date.now();
+  const hourInMs = 60 * 60 * 1000;
+
+  // Reset counter if more than an hour has passed since last submission
+  if (now - lastSubmission.value > hourInMs) {
+    submissionCount.value = 0;
+    return true;
+  }
+
+  // Limit to 5 submissions per hour
+  return submissionCount.value < 5;
+});
+
+// Time until next submission allowed (in minutes)
+const timeUntilNextSubmission = computed(() => {
+  if (canSubmit.value) return 0;
+
+  const now = Date.now();
+  const hourInMs = 60 * 60 * 1000;
+  const remainingMs = hourInMs - (now - lastSubmission.value);
+
+  return Math.ceil(remainingMs / (60 * 1000));
+});
 
 // Form state with validation
 const form = ref({
@@ -25,7 +66,7 @@ const form = ref({
 // Form validation
 const errors = ref({});
 
-// Enhanced validation with more specific checks
+// Enhanced validation with more specific checks and stronger security measures
 const validateForm = () => {
   errors.value = {};
 
@@ -39,40 +80,58 @@ const validateForm = () => {
       "Name should only contain letters, spaces, hyphens, and apostrophes";
   }
 
-  // Email validation (required, valid format)
+  // Email validation (required, valid format) - using a more comprehensive regex
   if (!form.value.email.trim()) {
     errors.value.email = "Email is required";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email.trim())) {
+  } else if (
+    !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+      form.value.email.trim()
+    )
+  ) {
     errors.value.email = "Please enter a valid email address";
   }
 
   // Phone validation (optional, but if provided must be valid)
-  if (form.value.phone && !/^[\d\+\-\s\(\)]+$/.test(form.value.phone.trim())) {
+  if (
+    form.value.phone &&
+    !/^[\d\+\-\s\(\)]{6,20}$/.test(form.value.phone.trim())
+  ) {
     errors.value.phone = "Please enter a valid phone number";
   }
 
-  // Message validation (required, min length)
+  // Message validation (required, min length, max length to prevent abuse)
   if (!form.value.message.trim()) {
     errors.value.message = "Message is required";
   } else if (form.value.message.trim().length < 10) {
     errors.value.message = "Message must be at least 10 characters";
+  } else if (form.value.message.trim().length > 1000) {
+    errors.value.message = "Message must be less than 1000 characters";
+  }
+
+  // Check for rate limiting
+  if (!canSubmit.value) {
+    errors.value.rateLimit = `Too many submissions. Please try again in ${timeUntilNextSubmission.value} minutes.`;
   }
 
   return Object.keys(errors.value).length === 0;
 };
 
-// Input sanitization function
+// Enhanced input sanitization function
 const sanitizeInput = (input) => {
   if (!input) return "";
 
-  // Create a temporary DOM element
+  // First pass: Create a temporary DOM element to escape HTML
   const tempElement = document.createElement("div");
-
-  // Set its text content (this escapes HTML)
   tempElement.textContent = input;
+  let sanitized = tempElement.innerHTML;
 
-  // Get the sanitized content
-  return tempElement.innerHTML;
+  // Second pass: Remove any potentially dangerous patterns
+  sanitized = sanitized
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "") // Remove script tags
+    .replace(/javascript:/gi, "blocked:") // Block javascript: protocol
+    .replace(/on\w+=/gi, "blocked="); // Block onload=, onclick=, etc.
+
+  return sanitized;
 };
 
 const handleSubmit = async (e) => {
@@ -91,6 +150,15 @@ const handleSubmit = async (e) => {
   submitStatus.value.show = false;
 
   try {
+    // Execute reCAPTCHA and get token
+    await recaptchaLoaded();
+    const token = await executeRecaptcha("contact_form");
+
+    // If token validation fails
+    if (!token) {
+      throw new Error("reCAPTCHA validation failed. Please try again.");
+    }
+
     // Sanitize all inputs before sending
     const templateParams = {
       from_name: sanitizeInput(form.value.name),
@@ -100,6 +168,7 @@ const handleSubmit = async (e) => {
       message: sanitizeInput(form.value.message),
       to_name: sanitizeInput(store.agency.name) || "Hit The Point Team",
       reply_to: sanitizeInput(form.value.email),
+      "g-recaptcha-response": token,
     };
 
     // Using environment variables instead of hardcoded values
@@ -109,6 +178,12 @@ const handleSubmit = async (e) => {
       templateParams,
       EMAILJS_PUBLIC_KEY
     );
+
+    // Update rate limiting counters
+    lastSubmission.value = Date.now();
+    submissionCount.value += 1;
+    localStorage.setItem("lastSubmission", lastSubmission.value.toString());
+    localStorage.setItem("submissionCount", submissionCount.value.toString());
 
     submitStatus.value = {
       show: true,
@@ -130,11 +205,13 @@ const handleSubmit = async (e) => {
     errors.value = {};
   } catch (error) {
     console.error("Error sending email:", error);
+
+    // Generic error message for users
     submitStatus.value = {
       show: true,
       isError: true,
       message:
-        "Sorry, there was an error sending your message. Please try again or contact us directly.",
+        "Sorry, there was an error processing your request. Please try again later or contact us directly.",
     };
   } finally {
     isSubmitting.value = false;
@@ -557,6 +634,33 @@ onMounted(() => {
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Add this below your form to explain data usage -->
+    <div class="mt-4 text-xs text-gray-500">
+      <p>
+        Your information is securely processed and will never be shared with
+        third parties. This form is protected by reCAPTCHA and the Google
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          class="text-orange-600 hover:underline"
+          >Privacy Policy</a
+        >
+        and
+        <a
+          href="https://policies.google.com/terms"
+          target="_blank"
+          class="text-orange-600 hover:underline"
+          >Terms of Service</a
+        >
+        apply.
+      </p>
+
+      <!-- Rate limiting message -->
+      <p v-if="errors.rateLimit" class="mt-2 text-sm text-red-500">
+        {{ errors.rateLimit }}
+      </p>
     </div>
   </div>
 </template>
