@@ -688,6 +688,12 @@ onMounted(() => {
   }
 }
 
+/* Hide reCAPTCHA badge */
+.grecaptcha-badge {
+  visibility: hidden !important;
+  display: none !important;
+}
+
 .reveal-element {
   opacity: 0;
   transform: translateY(30px);

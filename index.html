@@ -2,18 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Security headers -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; font-src 'self'; connect-src 'self' https://api.emailjs.com https://www.google.com/recaptcha/; frame-src https://www.google.com/recaptcha/; object-src 'none';"
+      content="default-src 'self';
+               script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://recaptcha.net/recaptcha/ http://js-na2.hs-scripts.com/ https://js-na2.hs-scripts.com/ https://js.hs-scripts.com/ https://js.hs-analytics.net/ http://js.hs-analytics.net/ https://js-na2.hs-banner.com/ http://js-na2.hs-banner.com/ 'unsafe-inline' 'unsafe-eval';
+               style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+               font-src 'self' https://fonts.gstatic.com;
+               img-src 'self' https://images.unsplash.com data: https:;
+               frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.net/recaptcha/ https://www.google.com/maps/;
+               connect-src 'self' https://api.emailjs.com https://www.google.com/recaptcha/ https://recaptcha.net/recaptcha/ https://*.hubspot.com;"
     />
+
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
+
+    <!-- Hide reCAPTCHA logo -->
+    <style>
+      .grecaptcha-badge {
+        visibility: hidden !important;
+        display: none !important;
+      }
+    </style>
 
     <title>Hit The Point - Digital Marketing & Web Development</title>
     <meta
@@ -89,6 +103,7 @@
       defer
       src="//js-na2.hs-scripts.com/242404005.js"
     ></script>
+
     <!-- End of HubSpot Embed Code -->
   </body>
 </html>
