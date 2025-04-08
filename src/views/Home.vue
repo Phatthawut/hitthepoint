@@ -22,6 +22,7 @@ onMounted(() => {
           src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1470&q=80"
           alt="Team working together"
           class="w-full h-full object-cover object-center transition-opacity duration-1000"
+          loading="lazy"
           :class="{ 'opacity-100': isLoaded, 'opacity-0': !isLoaded }"
         />
         <div class="absolute inset-0 bg-gray-900 opacity-60"></div>
@@ -252,12 +253,12 @@ onMounted(() => {
           <h2
             class="text-4xl font-dm-serif text-white sm:text-5xl w-full lg:w-1/2 reveal-element"
           >
-            Your Vision, Our Expertise Let’s Build the Future Together!
+            Your Vision, Our Expertise Let's Build the Future Together!
           </h2>
           <p
             class="mt-4 text-lg text-white w-full lg:w-1/2 reveal-element delay-200"
           >
-            Your online presence is more than just a website—it’s the digital
+            Your online presence is more than just a website—it's the digital
             foundation of your business. We craft websites that not only look
             great but also drive results. Let us help you create a future-proof
             online presence that grows with you.
