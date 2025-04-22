@@ -2,14 +2,15 @@
 import { useMainStore } from "../store";
 import { ref, onMounted, computed } from "vue";
 import emailjs from "@emailjs/browser";
-import { useReCaptcha } from "vue-recaptcha-v3";
-
-const { executeRecaptcha, recaptchaLoaded } = useReCaptcha();
 
 const store = useMainStore();
 const isLoaded = ref(false);
 const isSubmitting = ref(false);
-const submitStatus = ref({ show: false, isError: false, message: "" });
+const toast = ref({
+  show: false,
+  isError: false,
+  message: "",
+});
 
 // Access environment variables using import.meta.env instead of process.env
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -61,23 +62,44 @@ const form = ref({
   phone: "",
   message: "",
   company: "",
+  website: "", // Honeypot field - should remain empty
 });
 
 // Form validation
 const errors = ref({});
 
+// Function to show toast notification
+const showToast = (message, isError = false) => {
+  toast.value = {
+    show: true,
+    isError,
+    message,
+  };
+
+  // Auto-hide toast after 5 seconds
+  setTimeout(() => {
+    toast.value.show = false;
+  }, 5000);
+};
+
 // Enhanced validation with more specific checks and stronger security measures
 const validateForm = () => {
   errors.value = {};
+
+  // Check honeypot field - if filled, silently reject the form
+  if (form.value.website) {
+    console.log("Honeypot triggered - possible bot submission");
+    return false;
+  }
 
   // Name validation (required, min 2 chars, no numbers or special chars)
   if (!form.value.name.trim()) {
     errors.value.name = "Name is required";
   } else if (form.value.name.trim().length < 2) {
     errors.value.name = "Name must be at least 2 characters";
-  } else if (!/^[A-Za-z\s\-']+$/.test(form.value.name.trim())) {
+  } else if (!/^[\u0E00-\u0E7FA-Za-z\s\-']+$/.test(form.value.name.trim())) {
     errors.value.name =
-      "Name should only contain letters, spaces, hyphens, and apostrophes";
+      "Name should only contain letters, Thai characters, spaces, hyphens, and apostrophes";
   }
 
   // Email validation (required, valid format) - using a more comprehensive regex
@@ -138,27 +160,19 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (!validateForm()) {
-    submitStatus.value = {
-      show: true,
-      isError: true,
-      message: "Please fill in all required fields correctly.",
-    };
+    // Show toast for validation errors
+    if (form.value.website) {
+      // If honeypot was triggered, show a generic message
+      showToast("Something went wrong. Please try again later.", true);
+    } else {
+      showToast("Please fill in all required fields correctly.", true);
+    }
     return;
   }
 
   isSubmitting.value = true;
-  submitStatus.value.show = false;
 
   try {
-    // Execute reCAPTCHA and get token
-    await recaptchaLoaded();
-    const token = await executeRecaptcha("contact_form");
-
-    // If token validation fails
-    if (!token) {
-      throw new Error("reCAPTCHA validation failed. Please try again.");
-    }
-
     // Sanitize all inputs before sending
     const templateParams = {
       from_name: sanitizeInput(form.value.name),
@@ -168,7 +182,7 @@ const handleSubmit = async (e) => {
       message: sanitizeInput(form.value.message),
       to_name: sanitizeInput(store.agency.name) || "Hit The Point Team",
       reply_to: sanitizeInput(form.value.email),
-      "g-recaptcha-response": token,
+      source: "Hit The Point",
     };
 
     // Using environment variables instead of hardcoded values
@@ -185,12 +199,10 @@ const handleSubmit = async (e) => {
     localStorage.setItem("lastSubmission", lastSubmission.value.toString());
     localStorage.setItem("submissionCount", submissionCount.value.toString());
 
-    submitStatus.value = {
-      show: true,
-      isError: false,
-      message:
-        "Thank you! Your message has been sent successfully. We will get back to you soon.",
-    };
+    // Show success toast
+    showToast(
+      "Thank you! Your message has been sent successfully. We will get back to you soon."
+    );
 
     // Reset form
     form.value = {
@@ -199,6 +211,7 @@ const handleSubmit = async (e) => {
       phone: "",
       message: "",
       company: "",
+      website: "", // Reset honeypot field too
     };
 
     // Reset errors
@@ -206,13 +219,11 @@ const handleSubmit = async (e) => {
   } catch (error) {
     console.error("Error sending email:", error);
 
-    // Generic error message for users
-    submitStatus.value = {
-      show: true,
-      isError: true,
-      message:
-        "Sorry, there was an error processing your request. Please try again later or contact us directly.",
-    };
+    // Show error toast
+    showToast(
+      "Sorry, there was an error processing your request. Please try again later or contact us directly.",
+      true
+    );
   } finally {
     isSubmitting.value = false;
   }
@@ -465,6 +476,19 @@ onMounted(() => {
               Send Us a Message
             </h3>
             <form @submit="handleSubmit" class="space-y-6">
+              <!-- Honeypot field - invisible to humans, but bots might fill it -->
+              <div class="hidden" aria-hidden="true">
+                <label for="website" class="hidden">Website</label>
+                <input
+                  type="text"
+                  id="website"
+                  name="website"
+                  v-model="form.website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </div>
+
               <div class="transition-all duration-300 hover:translate-x-1">
                 <label
                   for="name"
@@ -561,19 +585,6 @@ onMounted(() => {
                 </p>
               </div>
 
-              <!-- Status Message -->
-              <div
-                v-if="submitStatus.show"
-                :class="[
-                  'p-4 rounded-md mb-4 transition-all duration-300',
-                  submitStatus.isError
-                    ? 'bg-red-50 text-red-700'
-                    : 'bg-green-50 text-green-700',
-                ]"
-              >
-                {{ submitStatus.message }}
-              </div>
-
               <!-- Submit Button -->
               <div>
                 <button
@@ -636,31 +647,85 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Add this below your form to explain data usage -->
+    <!-- Remove reCAPTCHA footnote -->
     <div class="mt-4 text-xs text-gray-500">
       <p>
         Your information is securely processed and will never be shared with
-        third parties. This form is protected by reCAPTCHA and the Google
-        <a
-          href="https://policies.google.com/privacy"
-          target="_blank"
-          class="text-orange-600 hover:underline"
-          >Privacy Policy</a
-        >
-        and
-        <a
-          href="https://policies.google.com/terms"
-          target="_blank"
-          class="text-orange-600 hover:underline"
-          >Terms of Service</a
-        >
-        apply.
+        third parties.
       </p>
 
       <!-- Rate limiting message -->
       <p v-if="errors.rateLimit" class="mt-2 text-sm text-red-500">
         {{ errors.rateLimit }}
       </p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div
+      v-if="toast.show"
+      class="fixed bottom-4 right-4 p-4 rounded-lg shadow-lg max-w-md z-50 transition-all duration-300"
+      :class="
+        toast.isError ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+      "
+    >
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg
+            v-if="!toast.isError"
+            class="h-6 w-6 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <svg
+            v-else
+            class="h-6 w-6 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium">{{ toast.message }}</p>
+        </div>
+        <div class="ml-auto pl-3">
+          <div class="-mx-1.5 -my-1.5">
+            <button
+              @click="toast.show = false"
+              class="inline-flex text-white hover:text-gray-100 focus:outline-none"
+            >
+              <span class="sr-only">Close</span>
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -728,6 +793,22 @@ onMounted(() => {
 .reveal-element.is-visible,
 .reveal-from-right.is-visible {
   animation-play-state: running;
+}
+
+/* Add toast animation styles */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.fixed.bottom-4.right-4 {
+  animation: slideInRight 0.3s ease-out forwards;
 }
 </style>
 
